@@ -14,53 +14,118 @@
         <div>
           <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
               <div class="container-fluid">
-                <a class="navbar-brand" href="index.html">Logo</a>
+                <a class="navbar-brand" href="homepage.html">Logo</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                      <a class="nav-link active" aria-current="page" href="homepage.html">Home</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="product.html">Products</a>
+                      <a class="nav-link" href="homepage-product.html">Products</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="#">Contact Us</a>
                     </li>
                   </ul>
                   <form class="d-flex">
-                    <a href="register.html" class="btn btn-outline-secondary me-2">Register</a>
-                    <a href="login.html" class="btn btn-outline-secondary me-2">Log in</a>
+                    <a href="index.html" class="btn btn-outline-secondary me-2">Log out</a>
                   </form>
                 </div>
               </div>
             </nav>
-      </div>
-    
-        <!--Hero section-->
-        <section class="hero-section">
-          <div class="hero-content">
-            <img src="">
-            <h1 class="hero-title">Discover amazing deals for you!</h1>
-            <p class="hero-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In lacinia erat ante, pulvinar pulvinar leo fermentum at. Maecenas interdum elit posuere, consequat risus eget, consectetur leo.</p>
-            <a href="product.html" class="hero-btn">Shop Now!</a>
-            <button id="ctaButton" class="hero-btn">Learn More.</button>
-              <!--Modal-->
-              <div id="myModal" class="modal">
-                <div class="modal-content">
-                  <span id="closeButton" class="close">&times;</span>
-                  <h2>Bookworm's Haven</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed scelerisque purus, at eleifend nulla. Vestibulum non fermentum mauris. Fusce eget lacinia lectus. Vivamus malesuada risus mauris, vel molestie sem egestas mattis. Aliquam congue, odio non malesuada bibendum, odio metus mattis est, ut commodo elit velit nec lectus. Morbi ornare lorem eu diam scelerisque, sed malesuada nisi efficitur. Morbi dictum sapien et leo cursus, eget ultricies felis imperdiet. Mauris nec vulputate est. Aenean congue lectus ut mauris scelerisque, vitae tristique velit venenatis. Phasellus viverra eros consectetur quam tempor gravida. Proin placerat tincidunt nibh, eu imperdiet ligula pulvinar non. Vestibulum in tellus lorem. Maecenas pharetra aliquet lobortis. Fusce sed neque varius, ultricies dolor sed, bibendum mauris. Nullam sit amet ullamcorper nibh. Morbi eget lobortis justo.</p>
-                </div>
-              </div>
-          </div>
-          </div>
-        </section>
-       
+        </div>
 
-        <!--Best products-->
+
+        <!--Available Products-->
+        <section class="available-products-section">
+            <h1 class="available-products-title">Available Right Now.</h1>
+            <p class="available-products-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <div id="availableProductsCarousel" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                        <!--Carousel Item 1-->
+                  <div class="carousel-item active">
+                      <div class="container d-flex justify-content-center">
+                          <div class="product">
+                              <img src="solo-leveling-vol-1-novel.jpg" alt="Book 1">
+                              <div class="product-content">
+                                  <h3>Lorem ipsum</h3>
+                                  <p>by dolor sit amet</p>
+                                  <p class="price">P15.99</p>
+                                  <a href="#" class="btn">Add to Cart</a>
+                              </div>
+                          </div>
+                          <!--Carousel Item 2-->
+                          <div class="product">
+                              <img src="solo-leveling-vol-1-novel.jpg" alt="Book 2">
+                              <div class="product-content">
+                                  <h3>Lorem ipsum</h3>
+                                  <p>by dolor sit amet</p>
+                                  <p class="price">P15.99</p>
+                                  <a href="#" class="btn">Add to Cart</a>
+                              </div>
+                          </div>
+                          <!--Carousel Item 3-->
+                          <div class="product">
+                            <img src="solo-leveling-vol-1-novel.jpg" alt="Book 2">
+                            <div class="product-content">
+                                <h3>Lorem ipsum</h3>
+                                <p>by dolor sit amet</p>
+                                <p class="price">P15.99</p>
+                                <a href="#" class="btn">Add to Cart</a>
+                            </div>
+                        </div>
+                        <!--Carousel Item 4-->
+                        <div class="product">
+                            <img src="solo-leveling-vol-1-novel.jpg" alt="Book 2">
+                            <div class="product-content">
+                                <h3>Lorem ipsum</h3>
+                                <p>by dolor sit amet</p>
+                                <p class="price">P15.99</p>
+                                <a href="#" class="btn">Add to Cart</a>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                            <!--for other items-->
+                        <div class="carousel-item">
+                          <div class="container d-flex justify-content-center">
+                              <div class="product">
+                                  <img src="solo-leveling-vol-1-novel.jpg" alt="Book 4">
+                                  <div class="product-content">
+                                      <h3>Lorem ipsum</h3>
+                                      <p>by dolor sit amet</p>
+                                      <p class="price">P15.99</p>
+                                      <a href="#" class="btn">Add to Cart</a>
+                                  </div>
+                              </div>
+                              <div class="product">
+                                  <img src="solo-leveling-vol-1-novel.jpg" alt="Book 5">
+                                  <div class="product-content">
+                                      <h3>Lorem ipsum</h3>
+                                      <p>by dolor sit amet</p>
+                                      <p class="price">P15.99</p>
+                                      <a href="#" class="btn">Add to Cart</a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#availableProductsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#availableProductsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!--best products-->
         <section class="best-products-section">
           <h1 class="best-products-title">Our Best Seller Books!</h1>
           <p class="best-products-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -90,7 +155,7 @@
                         </div>
                     </div>
                 </div>
-                          <!--For other items-->
+                          <!--for other items-->
                       <div class="carousel-item">
                         <div class="container d-flex justify-content-center">
                             <div class="product">
@@ -166,15 +231,7 @@
               </div>
         </section>
 
-        <!--About Us-->
-        <section class="about-us-section">
-          <div class="about-us-content">
-            <h1 class="about-us-title">Bookworm's Haven</h1>
-              <p class="about-us-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              
-        </section>
-
-        <!--Footer section-->
+        <!--footer section-->
         <footer class="bg-dark text-white py-4">
           <div class="container">
             <div class="row">
@@ -209,6 +266,35 @@
             </div>
           </div>
         </footer>
-        <script src="script.js"></script> 
+        <script>
+            // Update the year in the footer dynamically
+            document.getElementById('year').textContent = new Date().getFullYear();
+  
+            // Scroll to Top Button functionality
+            const scrollToTopBtn = document.createElement('button');
+            scrollToTopBtn.textContent = '↑';
+            scrollToTopBtn.classList.add('scroll-to-top-btn');
+            document.body.appendChild(scrollToTopBtn);
+  
+            // Show the scroll-to-top button when scrolling down
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.style.display = 'block';
+                } else {
+                    scrollToTopBtn.style.display = 'none';
+                }
+            });
+  
+            // Smooth scroll to top
+            scrollToTopBtn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+  
+            // Initialize the Bootstrap carousel to autoplay
+            const myCarousel = new bootstrap.Carousel(document.querySelector('#bestProductsCarousel'), {
+                interval: 3000,  // Adjust the autoplay speed (milliseconds)
+                ride: 'carousel' // Enable auto play when page loads
+            });
+          </script>
 </body>
 </html>

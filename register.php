@@ -11,47 +11,46 @@ $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected Successfully.";
 
+// Initialize variables
 $username = "";
 $email = "";
 $password = "";
 $confirmPassword = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get form data
     $username = $_POST["username"];
     $email = $_POST["email"];
     $password = $_POST["password"];
     $confirmPassword = $_POST["confirmPassword"];
 
-    do {
-        if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
-            $errorMessage = "All fields are required.";
-            break;
-        }
-
-        // Insert new user into database
-        $sql = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
-        $result = $conn->query($sql);
-
-        if (!$result) {
-            $errorMessage = "Invalid query: " . $conn->error;
-            break;
-        }
-
-        $username = "";
-    $email = "";
-    $password = "";
-    $confirmPassword = "";
-
-        $successMessage = "Product successfully added.";
-
-        header("location: /bookworm-s-haven/index.html");
+    // Check if passwords match
+    if ($password !== $confirmPassword) {
+        echo "Passwords do not match.";
         exit;
+    }
 
-    } while (false);
+    // Hash the password before storing it
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $username, $email, $hashedPassword); // Bind the parameters
+
+    // Execute the query
+    if ($stmt->execute()) {
+        // Registration successful
+        echo "Registration successful!";
+        // Redirect to login page after successful registration
+        header("Location: /bookworm-s-haven/login.php");
+        exit; // Make sure to exit to stop further code execution
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close statement and connection
+    $stmt->close();
+    $conn->close();
 }
-
-
-$conn->close();
 ?>

@@ -53,3 +53,12 @@ window.onclick = function(event) {
   }
 }
 
+// For search bar
+
+document.getElementById("searchForm").addEventListener("submit", function (e) {
+    const query = document.getElementById("searchInput").value.trim();
+    if (query === "") {
+        alert("Please enter a search query.");
+        e.preventDefault(); // Prevent form submission
+    }
+  });

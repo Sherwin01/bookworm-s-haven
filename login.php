@@ -1,8 +1,11 @@
 <?php
+session_start();  
+
+
 $servername = "localhost";
-$username = "root";
-$password = "";
-$database = "bookstore";
+$username = "root";  
+$password = "";      
+$database = "bookstore";  
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);
@@ -14,36 +17,40 @@ if ($conn->connect_error) {
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get form data
+    // Get the submitted username and password
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Prepare and execute query to check if username exists
-    $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+    
+    $stmt = $conn->prepare("SELECT user_id, username, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
-    // Check if username exists
+    // Check if the username exists
     if ($stmt->num_rows == 1) {
-        // Bind result
-        $stmt->bind_result($hashedPassword);
+        // Bind result variables
+        $stmt->bind_result($user_id, $db_username, $db_password);
         $stmt->fetch();
 
         // Verify the password
-        if (password_verify($password, $hashedPassword)) {
+        if (password_verify($password, $db_password)) {
             // Password is correct, login successful
-            echo "Login successful!";
-            // Redirect to a protected page or dashboard
-            header("Location: /bookworm-s-haven/index.html");
-            exit;
+            $_SESSION['user_id'] = $user_id;  
+            $_SESSION['username'] = $db_username;  
+
+            // Redirect to the homepage or a user dashboard
+            header("Location: homepage.html");  
+            exit();
         } else {
-            // Password is incorrect
-            echo "Invalid password.";
+            // Invalid password
+            header("Location: loginpage.php?error=1");
+            exit();
         }
     } else {
-        // Username does not exist
-        echo "Invalid username.";
+        // Invalid username
+        header("Location: loginpage.php?error=1");
+        exit();
     }
 
     // Close the prepared statement and connection

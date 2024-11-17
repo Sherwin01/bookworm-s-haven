@@ -40,25 +40,25 @@
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
             </div>
-            <button type="submit" class="btn btn-outline-primary mb-3 w-100">Register</button>
-            <a href="index.html" class="btn btn-outline-danger w-100">Cancel</a>
+            <button type="submit" class="btn btn-primary mb-3 w-100">Register</button>
+            <a href="index.html" class="btn btn-secondary w-100">Cancel</a>
         </form>
     </div>
 
     <script>
     document.getElementById('registerForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting until validation is complete
+    event.preventDefault(); 
 
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (password !== confirmPassword) {
         alert('Passwords do not match!');
-        return; // Stop form submission if passwords do not match
+        return;
     }
 
     // If passwords match, submit the form manually
-    this.submit(); // This will allow the form to submit to 'register.php'
+    this.submit();
     });
     </script>
 </body>

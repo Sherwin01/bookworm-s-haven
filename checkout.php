@@ -35,14 +35,14 @@ foreach ($_SESSION['cart'] as $item) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'];
     
-    // Insert order into orders table
+    
     $stmt = $conn->prepare("INSERT INTO orders (user_id, total_amount) VALUES (?, ?)");
     $stmt->bind_param("id", $user_id, $total_amount);
     $stmt->execute();
-    $order_id = $stmt->insert_id; // Get the inserted order ID
+    $order_id = $stmt->insert_id; 
     $stmt->close();
     
-    // Insert items into order_items table
+    
     foreach ($_SESSION['cart'] as $item) {
         $stmt = $conn->prepare("INSERT INTO order_items (order_id, book_id, quantity) VALUES (?, ?, ?)");
         $stmt->bind_param("iii", $order_id, $item['book_id'], $item['quantity']);

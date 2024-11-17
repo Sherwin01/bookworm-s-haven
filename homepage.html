@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookworm's Haven</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -27,16 +28,24 @@
                       <a class="nav-link" href="homepage-product.html">Products</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Contact Us</a>
+                      <a class="nav-link" href="homepage-contact-us.html">Contact Us</a>
                     </li>
                   </ul>
                   <form class="d-flex">
-                    <a href="profile.html" class="btn btn-outline-secondary me-2">My Profile</a>
+                    <a href="profile.php" class="btn btn-outline-secondary me-2">My Profile</a>
                     <a href="logout.php" class="btn btn-outline-secondary me-2">Log out</a>
                   </form>
                 </div>
               </div>
             </nav>
+      </div>
+      <!--search bar-->
+      <div class="search-container">
+        <form action="homepage-search.php" id="searchForm" method="GET" class="search-bar">
+        <input type="text" id="searchInput" name="query" placeholder="Search...">
+        <button type="submit" class="search-btn">Search</button>
+        </form>
+        <button class="cart-btn" onclick="window.location.href='cart.php';"><i class='bx bx-cart'></i></button>
       </div>
     
         <!--Hero section-->
@@ -80,12 +89,12 @@
                         </div>
                         <!--Carousel Item 2-->
                         <div class="product">
-                            <img src="solo-leveling-vol-1-novel.jpg" alt="Book 2">
+                            <img src="solo-leveling-vol-2-novel.jpg" alt="Book 1">
                             <div class="product-content">
-                                <h3>Lorem ipsum</h3>
-                                <p>by dolor sit amet</p>
-                                <p class="price">P15.99</p>
-                                <a href="cart.php?book_id=2" class="btn">Add to Cart</a>
+                                <h3>Solo Leveling Vol. 2</h3>
+                                <p>by Chugong</p>
+                                <p class="price">P500.00</p>
+                                <a href="cart.php?book_id=6" class="btn">Add to Cart</a>
                             </div>
                         </div>
                     </div>
@@ -94,21 +103,21 @@
                       <div class="carousel-item">
                         <div class="container d-flex justify-content-center">
                             <div class="product">
-                                <img src="solo-leveling-vol-1-novel.jpg" alt="Book 4">
-                                <div class="product-content">
-                                    <h3>Lorem ipsum</h3>
-                                    <p>by dolor sit amet</p>
-                                    <p class="price">P15.99</p>
-                                    <a href="cart.php?book_id=3" class="btn">Add to Cart</a>
+                                <img src="solo-leveling-vol-3-novel.jpg" alt="Book 1">
+                            <div class="product-content">
+                                <h3>Solo Leveling Vol. 3</h3>
+                                <p>by Chugong</p>
+                                <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=7" class="btn">Add to Cart</a>
                                 </div>
                             </div>
                             <div class="product">
-                                <img src="solo-leveling-vol-1-novel.jpg" alt="Book 5">
-                                <div class="product-content">
-                                    <h3>Lorem ipsum</h3>
-                                    <p>by dolor sit amet</p>
-                                    <p class="price">P15.99</p>
-                                    <a href="cart.php?book_id=4" class="btn">Add to Cart</a>
+                                <img src="solo-leveling-vol-4-novel.jpg" alt="Book 1">
+                            <div class="product-content">
+                                <h3>Solo Leveling Vol. 4</h3>
+                                <p>by Chugong</p>
+                                <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=8" class="btn">Add to Cart</a>
                                 </div>
                             </div>
                         </div>
@@ -164,13 +173,94 @@
               </div>
         </section>
 
-        <!--About Us-->
+        <!--All Products-->
         <section class="about-us-section">
-          <div class="about-us-content">
-            <h1 class="about-us-title">Bookworm's Haven</h1>
-              <p class="about-us-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              
-        </section>
+            <div class="about-us-content">
+              <h1 class="about-us-title">All Products</h1>
+                <p class="about-us-subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div id="allProductsCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                      <!--Carousel Item 1-->
+                      <div class="carousel-item active">
+                          <div class="container d-flex justify-content-center">
+                              <div class="product">
+                                <img src="solo-leveling-vol-1-novel.jpg" alt="Book 1">
+                                <div class="product-content">
+                                    <h3>Solo Leveling Vol. 1</h3>
+                                    <p>by Chugong</p>
+                                    <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=1" class="btn">Add to Cart</a>
+                                  </div>
+                              </div>
+                              <!--Carousel Item 2-->
+                              <div class="product">
+                                <img src="solo-leveling-vol-2-novel.jpg" alt="Book 1">
+                                <div class="product-content">
+                                    <h3>Solo Leveling Vol. 2</h3>
+                                    <p>by Chugong</p>
+                                    <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=6" class="btn">Add to Cart</a>
+                                  </div>
+                              </div>
+                              <!--Carousel Item 3-->
+                              <div class="product">
+                                <img src="solo-leveling-vol-3-novel.jpg" alt="Book 1">
+                                <div class="product-content">
+                                    <h3>Solo Leveling Vol. 3</h3>
+                                    <p>by Chugong</p>
+                                    <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=7" class="btn">Add to Cart</a>
+                                </div>
+                            </div>
+                            <!--Carousel Item 4-->
+                            <div class="product">
+                                <img src="solo-leveling-vol-4-novel.jpg" alt="Book 1">
+                                <div class="product-content">
+                                    <h3>Solo Leveling Vol. 4</h3>
+                                    <p>by Chugong</p>
+                                    <p class="price">P500.00</p>
+                                    <a href="cart.php?book_id=8" class="btn">Add to Cart</a>
+                              </div>
+                          </div>
+                          </div>
+                      </div>
+                                <!--For other items-->
+                            <div class="carousel-item">
+                              <div class="container d-flex justify-content-center">
+                                  <div class="product">
+                                    <img src="solo-leveling-vol-5-novel.jpg" alt="Book 1">
+                                    <div class="product-content">
+                                        <h3>Solo Leveling Vol. 5</h3>
+                                        <p>by Chugong</p>
+                                        <p class="price">P500.00</p>
+                                        <a href="cart.php?book_id=9" class="btn">Add to Cart</a>
+                                      </div>
+                                  </div>
+                                  <div class="product">
+                                    <img src="solo-leveling-vol-6-novel.jpg" alt="Book 1">
+                                    <div class="product-content">
+                                        <h3>Solo Leveling Vol. 6</h3>
+                                        <p>by Chugong</p>
+                                        <p class="price">P500.00</p>
+                                        <a href="cart.php?book_id=10" class="btn">Add to Cart</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#allProductsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#allProductsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                      </button>
+                      <div>
+                        <a href="homepage-product.html" class="hero-btn">See All</a>
+                      </div>
+                </div>
+          </section>
 
         <!--Footer section-->
         <footer class="bg-dark text-white py-4">
@@ -185,13 +275,13 @@
 
               <div class="col-md-4 mb-3">
                 <h5>Support</h5>
-                <p><a href="#" class="text-white">Contact Us</a></p>
+                <p><a href="homepage-contact-us.html" class="text-white">Contact Us</a></p>
               </div>
 
               <div class="col-md-4 mb-3">
                 <h5>Company</h5>
-                <p><a href="#" class="text-white">About</a></p>
-                <p><a href="#" class="text-white">Login</a></p>
+                <p><a href="homepage-contact-us.html" class="text-white">About</a></p>
+                <p><a href="admin-login.php" class="text-white">Login</a></p>
               </div>
             </div>
 

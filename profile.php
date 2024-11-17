@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Redirect if the user is not logged in
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: loginpage.php");
     exit;
@@ -9,23 +9,65 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Database connection
+
 $servername = "localhost";
 $username = "root";
 $password = "";
 $database = "bookstore";
+
 $conn = new mysqli($servername, $username, $password, $database);
 
-// Check connection
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 
-$stmt = $conn->prepare("SELECT order_id, total_amount, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$orders_result = $stmt->get_result();
+$user_stmt = $conn->prepare("SELECT username, email FROM users WHERE user_id = ?");
+if ($user_stmt === false) {
+    die('Prepare failed: ' . $conn->error);
+}
+
+$user_stmt->bind_param("i", $user_id);
+$user_stmt->execute();
+$user_result = $user_stmt->get_result();
+$user = $user_result->fetch_assoc();
+
+// Handle profile update
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $updated_username = $_POST['username'];
+    $updated_email = $_POST['email'];
+    $updated_password = $_POST['password'];
+    $updated_confirm_password = $_POST['confirmPassword'];
+
+    // Validate password
+    if ($updated_password !== $updated_confirm_password) {
+        echo "Passwords do not match!";
+        exit;
+    }
+
+    // Update username and email
+    $update_stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE user_id = ?");
+    $update_stmt->bind_param("ssi", $updated_username, $updated_email, $user_id);
+    $update_stmt->execute();
+
+    // If password is updated, hash and update it
+    if (!empty($updated_password)) {
+        $hashed_password = password_hash($updated_password, PASSWORD_BCRYPT);
+        $update_password_stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $update_password_stmt->bind_param("si", $hashed_password, $user_id);
+        $update_password_stmt->execute();
+    }
+
+    echo "Profile updated successfully!";
+    header("Refresh: 2; url=profile.php"); // Redirect to profile after 2 seconds
+}
+
+// Get order history
+$order_stmt = $conn->prepare("SELECT order_id, total_amount, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
+$order_stmt->bind_param("i", $user_id);
+$order_stmt->execute();
+$order_result = $order_stmt->get_result();
 
 ?>
 
@@ -34,11 +76,11 @@ $orders_result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order History</title>
+    <title>Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!--Navigation bar-->
+  <!--Navigation bar-->
   <div>
           <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
               <div class="container-fluid">
@@ -67,8 +109,31 @@ $orders_result = $stmt->get_result();
             </nav>
       </div>
     <div class="container mt-5">
-        <h1>Order History</h1>
-        <?php if ($orders_result->num_rows > 0): ?>
+        <!--Profile form-->
+        <h1>Your Profile</h1>
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+
+        <!-- Order History Section -->
+        <h2 class="mt-5">Your Order History</h2>
+        <?php if ($order_result->num_rows > 0): ?>
             <table class="table table-bordered mt-4">
                 <thead>
                     <tr>
@@ -79,7 +144,7 @@ $orders_result = $stmt->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($order = $orders_result->fetch_assoc()): ?>
+                    <?php while ($order = $order_result->fetch_assoc()): ?>
                         <tr>
                             <td><?= htmlspecialchars($order['order_id']) ?></td>
                             <td>P<?= number_format($order['total_amount'], 2) ?></td>
@@ -96,10 +161,13 @@ $orders_result = $stmt->get_result();
             <a href="homepage-product.html" class="btn btn-primary">Start Shopping</a>
         <?php endif; ?>
     </div>
+
 </body>
 </html>
 
 <?php
-$stmt->close();
+
+$user_stmt->close();
+$order_stmt->close();
 $conn->close();
 ?>

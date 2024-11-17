@@ -92,18 +92,18 @@ ob_start();
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                            <a class="nav-link active" aria-current="page" href="homepage.html">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="product.html">Products</a>
+                            <a class="nav-link" href="homepage-product.html">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about-us.html">Contact Us</a>
+                            <a class="nav-link" href="homepage-contact-us.html">Contact Us</a>
                         </li>
                     </ul>
                     <form class="d-flex">
-                        <a href="register.html" class="btn btn-outline-secondary me-2">Register</a>
-                        <a href="loginpage.php" class="btn btn-outline-secondary me-2">Log in</a>
+                        <a href="profile.php" class="btn btn-outline-secondary me-2">My Profile</a>
+                        <a href="logout.php" class="btn btn-outline-secondary me-2">Log out</a>
                     </form>
                 </div>
             </div>

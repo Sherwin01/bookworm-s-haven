@@ -1,73 +1,73 @@
 <?php
 session_start();
+require 'vendor/autoload.php';  
 
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: loginpage.php");
-    exit;
-}
+$client = new MongoDB\Client("mongodb://localhost:27017");
+$database = $client->bookstore;
+$usersCollection = $database->users;  
+$ordersCollection = $database->orders;  
 
-$user_id = $_SESSION['user_id'];
+// Get current user
+$userId = $_SESSION['user_id'];
+$user = $usersCollection->findOne(['_id' => new MongoDB\BSON\ObjectId($userId)]);
 
+// Initialize variables
+$email = $password = "";
+$emailError = $passwordError = "";
+$orderHistory = [];
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "bookstore";
+// Fetch user's order history
+$orderHistory = $ordersCollection->find(['user_id' => new MongoDB\BSON\ObjectId($userId)])->toArray();
 
-$conn = new mysqli($servername, $username, $password, $database);
+// Handle form submission to update user email or password
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize input data
+    if (isset($_POST["email"])) {
+        $email = htmlspecialchars(trim($_POST["email"]));
+    }
+    if (isset($_POST["password"])) {
+        $password = htmlspecialchars(trim($_POST["password"]));
+    }
 
+    $valid = true;
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-
-$user_stmt = $conn->prepare("SELECT username, email FROM users WHERE user_id = ?");
-if ($user_stmt === false) {
-    die('Prepare failed: ' . $conn->error);
-}
-
-$user_stmt->bind_param("i", $user_id);
-$user_stmt->execute();
-$user_result = $user_stmt->get_result();
-$user = $user_result->fetch_assoc();
-
-// Handle profile update
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $updated_username = $_POST['username'];
-    $updated_email = $_POST['email'];
-    $updated_password = $_POST['password'];
-    $updated_confirm_password = $_POST['confirmPassword'];
+    // Validate email
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailError = "A valid email is required.";
+        $valid = false;
+    }
 
     // Validate password
-    if ($updated_password !== $updated_confirm_password) {
-        echo "Passwords do not match!";
-        exit;
+    if (!empty($password) && strlen($password) < 6) {
+        $passwordError = "Password must be at least 6 characters long.";
+        $valid = false;
     }
 
-    // Update username and email
-    $update_stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE user_id = ?");
-    $update_stmt->bind_param("ssi", $updated_username, $updated_email, $user_id);
-    $update_stmt->execute();
+    // Update user data if valid
+    if ($valid) {
+        $updateData = [];
 
-    // If password is updated, hash and update it
-    if (!empty($updated_password)) {
-        $hashed_password = password_hash($updated_password, PASSWORD_BCRYPT);
-        $update_password_stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
-        $update_password_stmt->bind_param("si", $hashed_password, $user_id);
-        $update_password_stmt->execute();
+        if (!empty($email)) {
+            $updateData['email'] = $email;
+        }
+
+        if (!empty($password)) {
+            $updateData['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        if (count($updateData) > 0) {
+            // Update the user document
+            $usersCollection->updateOne(
+                ['_id' => new MongoDB\BSON\ObjectId($userId)],
+                ['$set' => $updateData]
+            );
+
+            // Refresh user data
+            $user = $usersCollection->findOne(['_id' => new MongoDB\BSON\ObjectId($userId)]);
+        }
     }
-
-    echo "Profile updated successfully!";
-    header("Refresh: 2; url=profile.php"); // Redirect to profile after 2 seconds
 }
-
-// Get order history
-$order_stmt = $conn->prepare("SELECT order_id, total_amount, order_date FROM orders WHERE user_id = ? ORDER BY order_date DESC");
-$order_stmt->bind_param("i", $user_id);
-$order_stmt->execute();
-$order_result = $order_stmt->get_result();
 
 ?>
 
@@ -76,98 +76,75 @@ $order_result = $order_stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <!--Navigation bar-->
-  <div>
-          <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-              <div class="container-fluid">
-                <a class="navbar-brand" href="homepage.html">Logo</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="homepage.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="homepage-product.html">Products</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="homepage-contact-us.html">Contact Us</a>
-                    </li>
-                  </ul>
-                  <form class="d-flex">
-                    <a href="profile.php" class="btn btn-outline-secondary me-2">My Profile</a>
-                    <a href="logout.php" class="btn btn-outline-secondary me-2">Log out</a>
-                  </form>
-                </div>
-              </div>
-            </nav>
-      </div>
-    <div class="container mt-5">
-        <!--Profile form-->
-        <h1>Your Profile</h1>
-        <form method="POST" class="mt-4">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">New Password</label>
-                <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-            </div>
-            <button type="submit" class="btn btn-primary">Update Profile</button>
-        </form>
 
-        <!-- Order History Section -->
-        <h2 class="mt-5">Your Order History</h2>
-        <?php if ($order_result->num_rows > 0): ?>
-            <table class="table table-bordered mt-4">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Total Amount</th>
-                        <th>Order Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($order = $order_result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($order['order_id']) ?></td>
-                            <td>P<?= number_format($order['total_amount'], 2) ?></td>
-                            <td><?= htmlspecialchars($order['order_date']) ?></td>
-                            <td>
-                                <a href="order_confirmation.php?order_id=<?= $order['order_id'] ?>" class="btn btn-primary btn-sm">View Details</a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>You have not placed any orders yet.</p>
-            <a href="homepage-product.html" class="btn btn-primary">Start Shopping</a>
-        <?php endif; ?>
+<!-- Profile Section -->
+<div class="container mt-5">
+    <h2 class="text-center">User Profile</h2>
+
+    <!-- Update Profile Form -->
+    <div class="row mt-4">
+        <div class="col-md-6 mx-auto">
+            <h4>Update Your Information</h4>
+            <form method="POST" action="profile.php">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                    <span class="text-danger"><?php echo $emailError; ?></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
+                    <span class="text-danger"><?php echo $passwordError; ?></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+
+            <!-- Cancel Button -->
+            <a href="homepage.php" class="btn btn-secondary mt-3">Cancel</a>
+        </div>
     </div>
+
+    <!-- Order History Section -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>Your Order History</h4>
+            <?php if (count($orderHistory) > 0): ?>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orderHistory as $order): ?>
+                            <tr>
+                                <td><?php echo date('F j, Y', $order['order_date']->toDateTime()->getTimestamp()); ?></td>
+                                <td>$<?php echo number_format($order['total'], 2); ?></td>
+                                <td><?php echo htmlspecialchars($order['status']); ?></td>
+                                <td><a href="order_details.php?order_id=<?php echo $order['_id']; ?>" class="btn btn-info btn-sm">View Details</a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>You have not placed any orders yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>
-
-<?php
-
-$user_stmt->close();
-$order_stmt->close();
-$conn->close();
-?>

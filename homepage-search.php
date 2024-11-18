@@ -1,5 +1,4 @@
 <?php
-// search.php
 if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     $searchQuery = trim($_GET['query']);
 
@@ -29,55 +28,7 @@ ob_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0px;
-            background-color: #f4f4f9;
-        }
-
-        h1 {
-            color: #333;
-            margin: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            padding: 20px;
-            margin: 10px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        p {
-            font-size: 18px;
-            color: #555;
-        }
-
-        .no-results {
-            color: #d9534f;
-        }
-
-        .text-end {
-        }
+        
     </style>
 </head>
 <body>
